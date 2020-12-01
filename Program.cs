@@ -17,13 +17,11 @@ namespace aoc2020
 
             foreach (var v1 in values)
             {
-                foreach (var v2 in values)
+                var v2 = values.FirstOrDefault(v => v + v1 == 2020);
+                if (v2 != 0)
                 {
-                    if (v1 + v2 == 2020)
-                    {
-                        Console.WriteLine($"Day 1 part 1 = {v1}*{v2}={v1 * v2}");
-                        break;
-                    }
+                    Console.WriteLine($"Day 1 part 1 = {v1 * v2}");
+                    break;
                 }
             }
 
@@ -35,7 +33,7 @@ namespace aoc2020
                     {
                         if (v1 + v2 + v3 == 2020)
                         {
-                            Console.WriteLine($"Day 1 part 2 = {v1}*{v2}*{v3}={v1 * v2 * v3}");                            
+                            Console.WriteLine($"Day 1 part 2 = {v1}*{v2}*{v3}={v1 * v2 * v3}");
                         }
                     }
                 }
