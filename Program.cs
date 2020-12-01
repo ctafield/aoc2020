@@ -33,11 +33,8 @@ namespace aoc2020
                     var v3 = values.FirstOrDefault(v => v + v1 + v2 == 2020);
                     if (v3 != default(int))
                     {
-                        if (v1 + v2 + v3 == 2020)
-                        {
-                            Console.WriteLine($"Day 1 part 2 = {v1}*{v2}*{v3}={v1 * v2 * v3}");
-                            return;
-                        }
+                        Console.WriteLine($"Day 1 part 2 = {v1 * v2 * v3}");
+                        return;                        
                     }
                 }
             }            
