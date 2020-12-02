@@ -7,6 +7,8 @@ namespace aoc2020
 {
     public class Day2 : AocBase
     {
+        private static Regex PasswordRegex = new Regex(@"(?'min'\d{1,2})-(?'max'\d{1,2})\s(?'character'\w):\s(?'password'\w*)");
+        
         public Day2()
         {
             Console.WriteLine("Day 2");
@@ -18,14 +20,14 @@ namespace aoc2020
 
         private void Part1(IEnumerable<string> values)
         {
-            var passwords = values.Select(s => new PasswordPolicy(s)).ToArray();
+            var passwords = values.Select(s => new PasswordPolicy(PasswordRegex, s)).ToArray();
             var validPasswords = passwords.Count(p => p.IsValid(true));
             Console.WriteLine($"Part 1 - {validPasswords}");
         }
 
         private void Part2(IEnumerable<string> values)
         {
-            var passwords = values.Select(s => new PasswordPolicy(s)).ToArray();
+            var passwords = values.Select(s => new PasswordPolicy(PasswordRegex, s)).ToArray();
             var validPasswords = passwords.Count(p => p.IsValid(false));
             Console.WriteLine($"Part 2 - {validPasswords}");
         }
@@ -38,11 +40,9 @@ namespace aoc2020
         public short MinCount { get; set; }
         public short MaxCount { get; set; }
 
-        public PasswordPolicy(string input)
-        {
-            var regex = new Regex(@"(?'min'\d{1,2})-(?'max'\d{1,2})\s(?'character'\w):\s(?'password'\w*)");
-
-            var match = regex.Match(input);
+        public PasswordPolicy(Regex PasswordRegex, string input)
+        {        
+            var match = PasswordRegex.Match(input);
             if (match.Success)
             {
                 MinCount = short.Parse(match.Groups[1].Value);
