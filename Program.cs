@@ -9,7 +9,8 @@ namespace aoc2020
         static void Main(string[] args)
         {
             //var day1 = new Day1();
-            var day2 = new Day2();
+            //var day2 = new Day2();
+            var day3 = new Day3();
         }
     }
 }
