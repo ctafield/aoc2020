@@ -17,6 +17,9 @@ namespace aoc2020
 
             var validPassports = passports.Count(p => p.IsValid());
             Console.WriteLine($"Part 1 - {validPassports}");
+
+            var validStrictPassports = passports.Count(p => p.IsValidStrict());
+            Console.WriteLine($"Part 2 - {validStrictPassports}");
         }
 
         private IEnumerable<Passport> ParseInput(IEnumerable<string> input)
@@ -100,7 +103,110 @@ namespace aoc2020
             }
 
             return false;
+        }
 
+        public bool IsValidStrict()
+        {
+            if (string.IsNullOrWhiteSpace(Eyr) ||
+                string.IsNullOrWhiteSpace(Pid) ||
+                string.IsNullOrWhiteSpace(Hcl) ||
+                string.IsNullOrWhiteSpace(Byr) ||
+                string.IsNullOrWhiteSpace(Iyr) ||
+                string.IsNullOrWhiteSpace(Ecl) ||
+                string.IsNullOrWhiteSpace(Hgt))
+            {
+                return false;
+            }
+
+            if (!int.TryParse(Byr, out var byr))
+            {
+                return false;
+            }
+
+            if (byr < 1920 || byr > 2002)
+            {
+                return false;
+            }
+
+            if (!int.TryParse(Iyr, out var iyr))
+            {
+                return false;
+            }
+
+            if (iyr < 2010 || iyr > 2020)
+            {
+                return false;
+            }
+
+            if (!int.TryParse(Eyr, out var eyr))
+            {
+                return false;
+            }
+
+            if (eyr < 2020 || eyr > 2030)
+            {
+                return false;
+            }
+
+            if (!Hgt.EndsWith("cm") && !Hgt.EndsWith("in"))
+            {
+                return false;
+            }
+
+            if (Hgt.EndsWith("cm"))
+            {
+                if (!int.TryParse(Hgt.Replace("cm", ""), out var hgt))
+                {
+                    return false;
+                }
+                if (hgt < 150 || hgt > 193)
+                {
+                    return false;
+                }
+            }
+
+            if (Hgt.EndsWith("in"))
+            {
+                if (!int.TryParse(Hgt.Replace("in", ""), out var hgt))
+                {
+                    return false;
+                }
+                if (hgt < 59 || hgt > 76)
+                {
+                    return false;
+                }
+            }
+
+            if (Hcl.Length != 7 || !Hcl.StartsWith("#")) {
+                return false;
+            }
+
+            const string validHair = "0123456789abcdef";
+
+            for (var i = 1; i < Hcl.Length; i++) {
+                if (!validHair.Contains(Hcl[i].ToString().ToLower())) {
+                    return false;
+                }
+            }
+
+            string[] validEyes = new string[] {
+                "amb", "blu", "brn", "gry", "grn", "hzl", "oth"
+            };
+
+            if (!validEyes.Contains(Ecl.ToLower())){
+                return false;
+            }
+
+            if (Pid.Length != 9)
+            {
+                return false;
+            }
+
+            if (!int.TryParse(Pid, out var temp1)) {
+                return false;
+            }
+
+            return true;
         }
 
         public string Eyr { get; set; }
