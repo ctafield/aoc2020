@@ -14,15 +14,24 @@ namespace aoc2020
             var input = LoadInput<string>(@"input\day5.txt");
 
             var seats = input.Select(i => new Seat(i)).ToArray();
-
-            foreach (var seat in seats)
-            {
-                Console.WriteLine($"row {seat.Row}, column {seat.Col}, seat ID {seat.SeatId}");
-            }
-
             var seatId = seats.OrderBy(s => s.SeatId).Last().SeatId;
 
-            Console.WriteLine($"Biggest {seatId}");
+            Console.WriteLine($"Part 1 - {seatId}");
+
+            var orderedSeats = seats.OrderBy(s => s.SeatId);
+
+            for (var i = 0; i < orderedSeats.Count(); i++) {
+                // is this seat taken?
+                var taken = orderedSeats.Any(s => s.SeatId == i);        
+                if (!taken) {
+                    // does it exist?
+                    var exists = orderedSeats.Count(s => s.SeatId == i -1 || s.SeatId == i + 1);                    
+                    // check both exist
+                    if (exists == 2) {
+                        Console.WriteLine($"Part 2 - {i}"); 
+                    }
+                }
+            }
         }
     }
 
