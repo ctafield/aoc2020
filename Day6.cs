@@ -47,18 +47,13 @@ namespace aoc2020
             return declarations;
         }        
 
-        private int CountYeses(Declaration[] declarations) {
-            var count = 0;
-            foreach (var d in declarations) {
-                count += d.Yes.Distinct().Count();
-            }
-            
-            return count;
+        private int CountYeses(Declaration[] declarations) {            
+            return declarations.Sum(d => d.Yes.Distinct().Count());
         }
 
         private int CountUniqueYeses(Declaration[] declarations) {
             var count = 0;
-
+            
             foreach (var d in declarations) {
                 var distinct = d.Yes.Distinct();
                 foreach (var c in distinct) {
