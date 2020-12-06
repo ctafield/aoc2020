@@ -13,38 +13,13 @@ namespace aoc2020
 
             var input = LoadInput<string>(@"input\day4.txt");
 
-            var passports = ParseInput(input);
+            var passports = ParseInput(input, (r) => new Passport(r));
 
             var validPassports = passports.Count(p => p.IsValid());
             Console.WriteLine($"Part 1 - {validPassports}");
 
             var validStrictPassports = passports.Count(p => p.IsValidStrict());
             Console.WriteLine($"Part 2 - {validStrictPassports}");
-        }
-
-        private IEnumerable<Passport> ParseInput(IEnumerable<string> input)
-        {
-
-            List<Passport> passports = new List<Passport>();
-
-            var current = new StringBuilder();
-
-            foreach (var row in input)
-            {
-                if (!string.IsNullOrWhiteSpace(row))
-                {
-                    current.Append(row + " ");
-                }
-                else
-                {
-                    passports.Add(new Passport(current.ToString()));
-                    current = new StringBuilder();
-                }
-            }
-
-            passports.Add(new Passport(current.ToString()));
-
-            return passports;
         }
     }
 

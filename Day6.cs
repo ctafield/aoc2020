@@ -13,7 +13,8 @@ namespace aoc2020
 
             var input = LoadInput<string>(@"input\day6.txt");
 
-            var declarations = ParseInput(input);
+            var declarations = ParseInput(input, (r) => new Declaration(r));
+
             var result1 = CountYeses(declarations.ToArray());
 
             Console.WriteLine($"Part 1 - {result1}");
@@ -22,30 +23,6 @@ namespace aoc2020
 
             Console.WriteLine($"Part 2 - {result2}");            
         }
-
-        private IEnumerable<Declaration> ParseInput(IEnumerable<string> input)
-        {
-            List<Declaration> declarations = new List<Declaration>();
-
-            var current = new StringBuilder();
-
-            foreach (var row in input)
-            {
-                if (!string.IsNullOrWhiteSpace(row))
-                {
-                    current.Append(row + " ");
-                }
-                else
-                {
-                    declarations.Add(new Declaration(current.ToString()));
-                    current = new StringBuilder();
-                }
-            }
-
-            declarations.Add(new Declaration(current.ToString()));
-
-            return declarations;
-        }        
 
         private int CountYeses(Declaration[] declarations) {            
             return declarations.Sum(d => d.DistinctYes.Count());
@@ -77,7 +54,7 @@ namespace aoc2020
         public Declaration(string input) {
             var flat = input.Replace(" ", "");
             Yes = flat.Select(c => c).ToArray();            
-            
+
             People = input.Split(" ").Count() - 1;
         }
     }
