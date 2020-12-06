@@ -48,20 +48,19 @@ namespace aoc2020
         }        
 
         private int CountYeses(Declaration[] declarations) {            
-            return declarations.Sum(d => d.Yes.Distinct().Count());
+            return declarations.Sum(d => d.DistinctYes.Count());
         }
 
         private int CountUniqueYeses(Declaration[] declarations) {
             var count = 0;
-            
-            foreach (var d in declarations) {
-                var distinct = d.Yes.Distinct();
-                foreach (var c in distinct) {
-                    if (d.Yes.Count(y => y == c) == d.People) {
-                        count += 1;
-                    }
-                }
-            }
+
+             foreach (var d in declarations) {                 
+                 foreach (var c in d.DistinctYes) {
+                     if (d.Yes.Count(y => y == c) == d.People) {
+                         count += 1;
+                     }
+                 }
+             }
             
             return count;
         }        
@@ -70,6 +69,12 @@ namespace aoc2020
     public class Declaration 
     {        
         public char[] Yes {get; set;}
+
+        public char[] DistinctYes { 
+            get { 
+                return Yes.Distinct().ToArray();
+            }
+        }
 
         public int People { get; set;}
 
