@@ -12,7 +12,7 @@ namespace aoc2020
             Console.WriteLine("Day 6");
 
             var input = LoadInput<string>(@"input\day6.txt");
-            var declarations = ParseInput(input, (r) => new Declaration(r)).ToArray();
+            var declarations = ParseInput(input, (r) => new Declaration(r));
 
             var result1 = CountYeses(declarations);
             Console.WriteLine($"Part 1 - {result1}");
@@ -21,11 +21,11 @@ namespace aoc2020
             Console.WriteLine($"Part 2 - {result2}");            
         }
 
-        private int CountYeses(Declaration[] declarations) {            
+        private int CountYeses(IEnumerable<Declaration> declarations) {            
             return declarations.Sum(d => d.DistinctYes.Count());
         }
 
-        private int CountUniqueYeses(Declaration[] declarations) {            
+        private int CountUniqueYeses(IEnumerable<Declaration> declarations) {            
             return declarations.Sum(d => d.EveryoneYes);
         }        
     }
@@ -36,9 +36,9 @@ namespace aoc2020
 
         public int People { get; set; }
 
-        public char[] DistinctYes { 
+        public IEnumerable<char> DistinctYes { 
             get { 
-                return Yes.Distinct().ToArray();
+                return Yes.Distinct();
             }
         }
 
