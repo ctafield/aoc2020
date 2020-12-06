@@ -30,7 +30,7 @@ namespace aoc2020
                 }
             }
 
-            results.Add(factory(current.ToString()));
+            results.Add(factory(result.ToString()));
 
             return results;
         }             

@@ -12,15 +12,12 @@ namespace aoc2020
             Console.WriteLine("Day 6");
 
             var input = LoadInput<string>(@"input\day6.txt");
+            var declarations = ParseInput(input, (r) => new Declaration(r)).ToArray();
 
-            var declarations = ParseInput(input, (r) => new Declaration(r));
-
-            var result1 = CountYeses(declarations.ToArray());
-
+            var result1 = CountYeses(declarations);
             Console.WriteLine($"Part 1 - {result1}");
 
-            var result2 = CountUniqueYeses(declarations.ToArray());
-
+            var result2 = CountUniqueYeses(declarations);
             Console.WriteLine($"Part 2 - {result2}");            
         }
 
