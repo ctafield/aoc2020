@@ -7,18 +7,74 @@ namespace aoc2020
 {
     public class Day7 : AocBase
     {
+        public Dictionary<string, LuggageRule[]> LuggageRules { get; private set; }
+
         public Day7()
         {
             Console.WriteLine("Day 7");
 
             var input = LoadInput<string>(@"input\day7-test.txt");
-            var luggageRules = ParseInput(input);
+            LuggageRules = ParseInput(input);
+
+            var results = FindContainers("shiny gold");
+
+            foreach (var res in results)
+            {
+                Console.WriteLine(res);
+            }
+            Console.WriteLine($"Part 1 - {results.Count()}");
         }
 
-        private Dictionary<string, LuggageRule[]> ParseInput(IEnumerable<string> rules) {
+        private IEnumerable<string> FindContainers(string target)
+        {
+            List<string> validContainers = new List<string>();
+
+            foreach (var rule in LuggageRules)
+            {
+                if (rule.Key == target)
+                {
+                    validContainers.Add(rule.Key);
+                }
+
+                var res = CheckContainer(target, rule).ToArray();
+                foreach (var result in res)
+                {
+                    validContainers.Add(result.Key);
+                }
+            }
+
+            return validContainers.Distinct();
+        }
+
+        private IEnumerable<KeyValuePair<string, LuggageRule[]>> CheckContainer(string target, KeyValuePair<string, LuggageRule[]> rule)
+        {
+            if (rule.Key == null || rule.Value == null)
+            {
+                yield break;
+            }
+
+            foreach (var r in rule.Value)
+            {
+                if (r.Colour == target)
+                {
+                    yield return rule;
+                }
+
+                KeyValuePair<string, LuggageRule[]> newRule = LuggageRules.FirstOrDefault(x => x.Key == r.Colour);
+                var results = CheckContainer(target, newRule).ToArray();
+                foreach (var t in results)
+                {
+                    yield return t;
+                }
+            }
+        }
+
+        private Dictionary<string, LuggageRule[]> ParseInput(IEnumerable<string> rules)
+        {
             var output = new Dictionary<string, LuggageRule[]>();
 
-            foreach (var rule in rules) {
+            foreach (var rule in rules)
+            {
                 // bright olive bags contain 5 dotted white bags, 2 wavy lavender bags.
                 var parts = rule.Split("bags contain", 2, StringSplitOptions.TrimEntries);
                 var index = parts[0];
@@ -34,12 +90,14 @@ namespace aoc2020
 
     public class LuggageRule
     {
-        public int Count { get; set;}
+        public int Count { get; set; }
 
-        public string Colour { get; set;}
+        public string Colour { get; set; }
 
-        public LuggageRule(string input) {
-            if (input == "no other bags") {
+        public LuggageRule(string input)
+        {
+            if (input == "no other bags")
+            {
                 Count = -1;
                 return;
             }
