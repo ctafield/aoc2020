@@ -18,7 +18,7 @@ namespace aoc2020
             var target = "shiny gold";
             var count = 0;
             foreach (var rule in LuggageRules.Where(x => x.Key != target)) {
-                if (ContainsTarget(target, rule, 1)) {
+                if (ContainsTarget(target, rule)) {
                     count += 1;
                 }
             }
@@ -26,7 +26,7 @@ namespace aoc2020
             Console.WriteLine($"Part 1 - {count}");
         }
 
-        private bool ContainsTarget(string target, KeyValuePair<string, LuggageRule[]> rules, int level)
+        private bool ContainsTarget(string target, KeyValuePair<string, LuggageRule[]> rules)
         {
             if (rules.Value == null) {
                 return false;
@@ -34,7 +34,7 @@ namespace aoc2020
 
             foreach (var rule in rules.Value) {
                 var subBag = LuggageRules.FirstOrDefault(x => x.Key == rule.Colour);
-                if (rules.Key == target || ContainsTarget(target, subBag, level+1)) {                    
+                if (rules.Key == target || ContainsTarget(target, subBag)) {                    
                     return true;
                 }
             }
