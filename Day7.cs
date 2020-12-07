@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace aoc2020
 {
@@ -16,57 +15,31 @@ namespace aoc2020
             var input = LoadInput<string>(@"input\day7-test.txt");
             LuggageRules = ParseInput(input);
 
-            var results = FindContainers("shiny gold");
-
-            foreach (var res in results)
-            {
-                Console.WriteLine(res);
+            var target = "shiny gold";
+            var count = 0;
+            foreach (var rule in LuggageRules.Where(x => x.Key != target)) {
+                if (ContainsTarget(target, rule, 1)) {
+                    count += 1;
+                }
             }
-            Console.WriteLine($"Part 1 - {results.Count()}");
+
+            Console.WriteLine($"Part 1 - {count}");
         }
 
-        private IEnumerable<string> FindContainers(string target)
+        private bool ContainsTarget(string target, KeyValuePair<string, LuggageRule[]> rules, int level)
         {
-            List<string> validContainers = new List<string>();
+            if (rules.Value == null) {
+                return false;
+            }
 
-            foreach (var rule in LuggageRules)
-            {
-                if (rule.Key == target)
-                {
-                    validContainers.Add(rule.Key);
-                }
-
-                var res = CheckContainer(target, rule).ToArray();
-                foreach (var result in res)
-                {
-                    validContainers.Add(result.Key);
+            foreach (var rule in rules.Value) {
+                var subBag = LuggageRules.FirstOrDefault(x => x.Key == rule.Colour);
+                if (rules.Key == target || ContainsTarget(target, subBag, level+1)) {                    
+                    return true;
                 }
             }
 
-            return validContainers.Distinct();
-        }
-
-        private IEnumerable<KeyValuePair<string, LuggageRule[]>> CheckContainer(string target, KeyValuePair<string, LuggageRule[]> rule)
-        {
-            if (rule.Key == null || rule.Value == null)
-            {
-                yield break;
-            }
-
-            foreach (var r in rule.Value)
-            {
-                if (r.Colour == target)
-                {
-                    yield return rule;
-                }
-
-                KeyValuePair<string, LuggageRule[]> newRule = LuggageRules.FirstOrDefault(x => x.Key == r.Colour);
-                var results = CheckContainer(target, newRule).ToArray();
-                foreach (var t in results)
-                {
-                    yield return t;
-                }
-            }
+            return false;
         }
 
         private Dictionary<string, LuggageRule[]> ParseInput(IEnumerable<string> rules)
@@ -75,13 +48,15 @@ namespace aoc2020
 
             foreach (var rule in rules)
             {
-                // bright olive bags contain 5 dotted white bags, 2 wavy lavender bags.
                 var parts = rule.Split("bags contain", 2, StringSplitOptions.TrimEntries);
                 var index = parts[0];
 
-                var theseRules = parts[1].Replace(".", "").Split(',').Select(r => new LuggageRule(r.Trim())).ToArray();
-
-                output.Add(index, theseRules);
+                if (!parts[1].Contains("no other bags"))  {
+                    var theseRules = parts[1].Replace(".", "").Split(',').Select(r => new LuggageRule(r.Trim())).ToArray();
+                    output.Add(index, theseRules);
+                } else {
+                    output.Add(index, null);
+                }
             }
 
             return output;
@@ -96,11 +71,6 @@ namespace aoc2020
 
         public LuggageRule(string input)
         {
-            if (input == "no other bags")
-            {
-                Count = -1;
-                return;
-            }
             var parts = input.Split(" ", 2, StringSplitOptions.TrimEntries);
             Count = int.Parse(parts[0]);
             Colour = parts[1].Replace("bags", "bag").Replace("bag", "").Trim();
