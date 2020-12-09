@@ -13,17 +13,24 @@ namespace aoc2020
         {
             Console.WriteLine("Day 8");
 
-            var input = LoadInput<string>(@"input\day8.txt");
-            var operations = input.Select(x => new OpCode(x)).ToArray();
+            var input = LoadInput<string>(@"input\day8.txt").ToArray();
 
             Console.WriteLine("Part 1");
-
-            Execution(operations);
+            Part1(input);
 
             Console.WriteLine("Part 2");
+            Part2(input);
+        }
 
-            // try changing jmp to nop
-            for (var i = 0; i < operations.Length; i++)
+        private void Part1(string[] input)
+        {
+            var operations = input.Select(x => new OpCode(x)).ToArray();
+            Execute(operations);
+        }
+
+        private void Part2(string[] input)
+        {
+            for (var i = 0; i < input.Length; i++)
             {
                 var newOpCodes = input.Select(x => new OpCode(x)).ToArray();
                 var swapped = false;
@@ -44,7 +51,7 @@ namespace aoc2020
                     continue;
                 }
 
-                var res = Execution(newOpCodes, false);
+                var res = Execute(newOpCodes, false);
                 if (res)
                 {
                     Console.WriteLine($"Accumulator : {accumulator}");
@@ -53,11 +60,11 @@ namespace aoc2020
             }
         }
 
-        private bool Execution(OpCode[] operations, bool logOnLoop = true)
+        private bool Execute(OpCode[] operations, bool logOnLoop = true)
         {
             pointer = 0;
             accumulator = 0;
-                        
+
             while (true)
             {
                 if (pointer >= operations.Length)
@@ -105,15 +112,13 @@ namespace aoc2020
 
         public int Val { get; set; }
 
-        public int HitCount { get; set; }
+        public int HitCount { get; set; } = 0;
 
         public OpCode(string input)
         {
             var parts = input.Split(' ');
             Op = parts[0];
-            Val = int.Parse(parts[1].Replace("+", ""));
-
-            HitCount = 0; 
-         }
+            Val = int.Parse(parts[1]);
+        }
     }
 }
